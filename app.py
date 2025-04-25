@@ -47,6 +47,7 @@ def chat():
     payload = {"messages": session['history']}
     response = requests.post(url, json=payload, headers=headers, timeout=10)
     reply = response.json()['choices'][0]['message']['content']
+    print(f"[LOG] {datetime.now().isoformat()} | Age: {age} | User: {user_message} | Bot: {reply}")
 
     # 添加助手回复到历史
     session['history'].append({"role": "assistant", "content": reply})
