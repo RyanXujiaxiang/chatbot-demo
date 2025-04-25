@@ -21,20 +21,20 @@ def index():
     age = request.args.get("age", "unknown")
     session['age'] = age  # 将年龄记录在 session 中，便于后续对话使用
     session['history'] = [
-        {"role": "system", "content": f"You are talking to a {age}-year-old user."}
+        {"role": "system", "content": f"You are chatting with a user who is {age} years old."}
     ]
-    return render_template("chat.html", age=age)
+    return render_template("chat.html")  # age 不再通过 Jinja2 传入
 
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.json
     user_message = data.get("message", "")
-    age = session.get("age", "unknown")
+    age = data.get("age", session.get("age", "unknown"))  # 从请求数据中读取 age，如果没有则回退到 session
 
     # 初始化聊天历史（如果尚未设置）
     if "history" not in session:
         session['history'] = [
-            {"role": "system", "content": f"You are talking to a {age}-year-old user."}
+            {"role": "system", "content": f"You are chatting with a user who is {age} years old."}
         ]
 
     # 添加用户信息到对话历史
