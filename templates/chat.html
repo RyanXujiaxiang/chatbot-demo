@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+    <p><strong>🤖 当前年龄参数：</strong> <span id="debug-age"></span></p>
+
     <div id="chatbox" class="chatbox"></div>
     <div class="input-area">
         <input id="message" placeholder="Type your message here">
@@ -12,7 +14,8 @@
     </div>
 
     <script>
-        const age = "{{ age }}";
+        const age = new URLSearchParams(window.location.search).get("age");
+        document.getElementById("debug-age").innerText = age || "未获取";
 
         async function send() {
             const msgInput = document.getElementById("message");
@@ -26,7 +29,7 @@
             const res = await fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: message, age: age })
+                body: JSON.stringify({ message: message, age: age })  // ✅ 把 age 传给 Flask
             });
 
             const data = await res.json();
